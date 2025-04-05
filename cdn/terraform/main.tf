@@ -50,10 +50,9 @@ resource "fastly_service_vcl" "this_service" {
   }
 
   backend {
-    address       = "http-me.glitch.me"
-    name          = "Glitch Test Site"
-    port          = 80
-    override_host = "http-me.glitch.me"
+    address = "r.vlucaswang.com"
+    name    = "http-test-resources"
+    port    = 80
   }
 
   force_destroy = var.service_force_destroy

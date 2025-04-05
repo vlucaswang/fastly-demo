@@ -45,3 +45,40 @@ variable "tls_force_destroy" {
   type        = bool
   default     = true
 }
+
+variable "shield" {
+  type = string
+}
+
+variable "request_settings" {
+  description = "Settings used to customize Fastly's request in the exposed service handling. Ref: t.ly/gsyr"
+  type = list(object({
+    name      = string
+    force_ssl = bool
+  }))
+  default = []
+}
+
+variable "condition" {
+  description = "Conditions used to customize Fastly's request in the exposed service handling. Ref: t.ly/gsyr"
+  type = list(object({
+    name      = string
+    priority  = number
+    statement = string
+    type      = string
+  }))
+  default = []
+}
+
+variable "response_object" {
+  description = "Response objects used to customize Fastly's request in the exposed service handling. Ref: t.ly/gsyr"
+  type = list(object({
+    name              = string
+    content_type      = string
+    content           = string
+    request_condition = string
+    response          = string
+    status            = number
+  }))
+  default = []
+}

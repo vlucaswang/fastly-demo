@@ -25,7 +25,7 @@ The architecture of the demo solution consists of the following components:
 ```mermaid
 graph LR
     User(User) -->|Requests website| DNS[DNS Provider]
-    DNS -->|Resolves domain name<br>fastly-demo.example.com| Fastly[Fastly CDN]
+    DNS -->|Resolves domain name<br>fastly-demo.vlucaswang.com| Fastly[Fastly CDN]
     Cache -->|Deliver content| User
 
     subgraph "Fastly Edge Cloud"
@@ -50,4 +50,42 @@ graph LR
     class User user;
     class Fastly,Cache fastly;
     class TLS,Domain security;
+```
+
+## Current State/Future State
+
+```mermaid
+graph TD
+    User(User) -->|Requests website| DNS[DNS Provider]
+    DNS -->|Resolves domain name| Router1[Home Router]
+    DNS -->|Resolves domain name| Fastly[Fastly CDN]
+    Current_State --> Future_State
+
+    subgraph "Current_State"
+        Router1 -->|Port forwarding| Site1[Mock HTTP]
+        Router1 -->|Port forwarding| Site2[HTTPBin]
+
+        subgraph "Home Server"
+            Site1
+            Site2
+        end
+    end
+
+    subgraph "Future_State"
+        Fastly -->|Backend| Router2[Home Router]
+        Router2 -->|Port forwarding| Nginx2[Nginx Proxy]
+
+        subgraph "Home Server"
+            Nginx2 -->|Reversed Proxy| Site3[Mock HTTP]
+            Nginx2 -->|Reversed Proxy| Site4[HTTPBin]
+        end
+    end
+
+    classDef user fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef fastly fill:#bbf,stroke:#33f,stroke-width:2px;
+    classDef infra fill:#bfb,stroke:#3f3,stroke-width:1px;
+
+    class User user;
+    class Fastly,DNS fastly;
+    class Site1,Site2,Site3,Site4,Nginx2,Router1,Router2 infra;
 ```

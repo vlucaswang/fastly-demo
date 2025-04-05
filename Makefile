@@ -6,3 +6,12 @@ help: ## print targets and their descrptions
 
 fmt: ## terraform fmt
 	terraform fmt -recursive -write .
+
+plan: ## terraform plan
+	cd cdn/terraform && terraform plan --var-file=tls.tfvars
+
+apply: ## terraform apply
+	cd cdn/terraform && terraform apply --var-file=tls.tfvars
+
+destroy: ## terraform destroy
+	cd cdn/terraform && terraform destroy --var-file=tls.tfvars

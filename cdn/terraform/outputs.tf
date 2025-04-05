@@ -7,3 +7,7 @@ output "service_id" {
   description = "The fastly service identifier created"
   value       = fastly_service_vcl.this_service.id
 }
+
+output "actived_version" {
+  value = fastly_service_vcl.this_service.active_version
+}

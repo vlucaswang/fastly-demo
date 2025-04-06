@@ -82,3 +82,9 @@ variable "response_object" {
   }))
   default = []
 }
+
+variable "newrelic_log_license_key" {
+  description = "New Relic license key"
+  type        = string
+  sensitive   = true
+}

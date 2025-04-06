@@ -129,6 +129,12 @@ resource "fastly_service_vcl" "this_service" {
     name    = "custom_vcl"
   }
 
+  logging_newrelic {
+    name   = "New Relic"
+    token  = var.newrelic_log_license_key
+    format = file("${path.module}/files/newrelic_log_format.txt")
+  }
+
   force_destroy = var.service_force_destroy
 }
 

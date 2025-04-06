@@ -1,5 +1,6 @@
 sub vcl_recv {
-  #FASTLY recv
+
+#FASTLY recv
 
   if (req.url.path == "/anything/here") {
     add req.http.X-CustomHeader = "incoming_client_request";
@@ -12,8 +13,9 @@ sub vcl_recv {
   return(lookup);
 }
 
+
 sub vcl_error {
-  #FASTLY error
+#FASTLY error
   if (obj.status == 600) {
     set obj.status = 404;
     set obj.http.Content-Type = "text/html";

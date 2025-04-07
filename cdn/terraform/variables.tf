@@ -22,6 +22,12 @@ variable "fastly_domains" {
   default     = []
 }
 
+variable "tls_domains" {
+  description = "Domain names for TLS services"
+  type        = list(string)
+  default     = []
+}
+
 variable "service_force_destroy" {
   description = "Services that are active cannot be destroyed. In order to destroy the Service must be true, otherwise false"
   type        = bool

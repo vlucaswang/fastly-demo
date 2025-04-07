@@ -4,22 +4,22 @@ resource "cloudflare_dns_record" "this_validation_dns_record" {
   depends_on = [fastly_tls_subscription.this_service]
 
   for_each = {
-    # The following `for` expression (due to the outer {}) will produce an object with key/value pairs.
-    # The 'key' is the domain name we've configured (e.g. a.example.com, b.example.com)
-    # The 'value' is a specific 'challenge' object whose record_name matches the domain (e.g. record_name is _acme-challenge.a.example.com).
     for domain in fastly_tls_subscription.this_service.domains :
-    domain => element([
+    replace(domain, "*.", "") => element([
       for obj in fastly_tls_subscription.this_service.managed_dns_challenges :
-      obj if obj.record_name == "_acme-challenge.${domain}" # We use an `if` conditional to filter the list to a single element
-    ], 0)                                                   # `element()` returns the first object in the list which should be the relevant 'challenge' object we need
+      obj if obj.record_name == "_acme-challenge.${replace(domain, "*.", "")}" # We use an `if` conditional to filter the list to a single element
+    ], 0)...                                                                   # `element()` returns the first object in the list which should be the relevant 'challenge' object we need
+    # The ellipsis ... avoids Terraform complaining that the resulting object will contain multiple keys that are duplicates (e.g. multiple 'example.com' keys).
+    # It essentially groups the 'values' (the single challenge) under the common key (the normalised domain).
+    # Then below we extract the first value (as they'll all be the same 'challenge' value).
   }
 
   zone_id = var.cloudflare_zone_id
   comment = "Fastly demo verification record"
-  name    = each.value.record_name
-  content = each.value.record_value
+  name    = each.value[0].record_name
+  content = each.value[0].record_value
   ttl     = 60
-  type    = each.value.record_type
+  type    = each.value[0].record_type
 }
 
 resource "cloudflare_dns_record" "this_service_dns_record" {
@@ -41,7 +41,7 @@ resource "fastly_service_vcl" "this_service" {
   name = "Fastly demo service"
 
   dynamic "domain" {
-    for_each = var.fastly_domains
+    for_each = var.tls_domains
 
     content {
       name    = domain.value

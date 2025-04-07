@@ -11,6 +11,7 @@ sub vcl_recv {
   return(lookup);
 }
 
+
 sub vcl_fetch {
 #FASTLY fetch
   if (req.url.path == "/image/jpeg") {

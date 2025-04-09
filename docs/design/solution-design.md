@@ -55,13 +55,14 @@ graph LR
 ## Current State/Future State
 
 ```mermaid
-graph TD
+graph TB
     User(User) -->|Requests website| DNS[DNS Provider]
-    DNS -->|Resolves domain name| Router1[Home Router]
+    DNS -->|Resolves domain name| Tailscale
     DNS -->|Resolves domain name| Fastly[Fastly CDN]
-    Current_State --> Future_State
+
 
     subgraph "Current_State"
+        Tailscale -->|Tunnel| Router1[Home Router]
         Router1 -->|Port forwarding| Site1[Mock HTTP]
         Router1 -->|Port forwarding| Site2[HTTPBin]
 
@@ -86,6 +87,6 @@ graph TD
     classDef infra fill:#bfb,stroke:#3f3,stroke-width:1px;
 
     class User user;
-    class Fastly,DNS fastly;
+    class Fastly,DNS,Tailscale fastly;
     class Site1,Site2,Site3,Site4,Nginx2,Router1,Router2 infra;
 ```
